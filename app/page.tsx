@@ -18,7 +18,9 @@ import {
   Minus,
   ExternalLink,
   Clock,
-  Calendar
+  Calendar,
+  Menu,
+  X
 } from 'lucide-react';
 
 // --- DATA CONFIGURATION (EASY TO CHANGE) ---
@@ -65,98 +67,98 @@ const INSTRUCTORS_DATA = [
     name: "Johanan Carreño", 
     role: "Head Instructor", 
     rank: "Black Belt",
-    specialty: "De la Riva & Pressure Passing",
+    specialty: "Escuela Focus Central",
     image: "/images/profesores/headcouch.jpeg"
   },
   { 
     name: "Daniel García", 
     role: "Kids Program Director", 
     rank: "Brown Belt",
-    specialty: "Modern Jiu-Jitsu & Self Defense",
+    specialty: "Escuela Focus",
     image: "/images/profesores/fiestoso.png"
   },
   { 
     name: "Diego Felipe", 
     role: "Fundamentals Coach", 
     rank: "Brown Belt",
-    specialty: "Fundamentos y Técnicas Básicas",
+    specialty: "Escuela Focus",
     image: "/images/profesores/Diego Felipe.png"
   },
   { 
     name: "Francisca Martinez", 
     role: "Women's Program", 
     rank: "Black Belt",
-    specialty: "Guard Retention & Mobility",
+    specialty: "Escuela Triada",
     image: "/images/profesores/fran.png"
   },
   { 
     name: "Alan Magendzo", 
     role: "No-Gi Specialist", 
     rank: "Black Belt",
-    specialty: "Leg Locks & Submission",
+    specialty: "Escuela Focus",
     image: "/images/profesores/alan.png"
   },
   { 
     name: "Christian Marin", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Profe Focus Independencia",
+    specialty: "Escuela Focus Independencia",
     image: "/images/profesores/Christian Marin.png"
   },
   { 
     name: "Andrés Canales", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Leglocks - Escuela Corso",
+    specialty: "Escuela Corso",
     image: "/images/profesores/Andrés Canales.png"
   },
   { 
     name: "Diego Lobos", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "De la Riva Mortal Asesina",
+    specialty: "Escuela Focus",
     image: "/images/profesores/Diego Lobos.png"
   },
   { 
     name: "Federico Noguera", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Instructor Escuela Corso",
+    specialty: "Escuela Corso",
     image: "/images/profesores/Federico Noguera .png"
   },
   { 
     name: "Ivan Noguera", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Triángulo - Escuela Corso",
+    specialty: "Escuela Corso",
     image: "/images/profesores/Ivan Noguera.png"
   },
   { 
     name: "Pablo Leon", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Jiu-Jitsu Moderno - Profe Raion BJJ",
+    specialty: "Escuela Raion BJJ",
     image: "/images/profesores/Pablo Leon.jpeg"
   },
   { 
     name: "Esteban Pardo", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Fundamental - Profe Animal Grip",
+    specialty: "Escuela Animal Grip",
     image: "/images/profesores/negrito.png"
   },
   { 
     name: "Sebastián Cadena", 
     role: "Submission Specialist", 
-    rank: "Black Belt",
-    specialty: "Especialista en Finalizaciones",
-    image: "/images/profesores/profe4.png"
+    rank: "Brown Belt",
+    specialty: "Escuela Focus",
+    image: "/images/profesores/Seba Cadenas.png"
   },
   { 
     name: "Ricardo Cardoso", 
     role: "BJJ Instructor", 
     rank: "Black Belt",
-    specialty: "Jiu-Jitsu Lifestyle",
+    specialty: "Escuela Olas Combat",
     image: "/images/profesores/Ricardo Cardoso.png"
   }
 ];
@@ -176,6 +178,39 @@ const AFFILIATES_DATA = [
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = React.useState<number | null>(null);
   const [showSplash, setShowSplash] = React.useState(true);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const carouselRef = React.useRef<HTMLDivElement>(null);
+  const [constraints, setConstraints] = React.useState({ left: 0, right: 0 });
+
+  const handleNav = (id: string) => {
+    setIsMenuOpen(false);
+    // Use a small timeout to allow the menu closing animation/state to start
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
+  // Recalculate carousel constraints
+  React.useEffect(() => {
+    if (!showSplash && carouselRef.current) {
+      setConstraints({
+        left: -(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth),
+        right: 0
+      });
+    }
+  }, [showSplash]);
 
   // Auto-hide splash after 8 seconds if not skipped
   React.useEffect(() => {
@@ -284,12 +319,15 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 transform rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+              <div className="w-12 md:w-16 h-12 md:h-16 transform rotate-3 hover:rotate-0 transition-transform cursor-pointer">
                 <img src="/Logos/SixBlades.png" alt="Six Blades" className="w-full h-full object-contain filter-focus-red" />
-              </div>              <div className="h-16 md:h-20 w-auto ml-2">
+              </div>              
+              <div className="h-10 md:h-14 w-auto ml-1 md:ml-2">
                 <img src="/Logos/logo_focus.png" alt="Focus Academy" className="h-full w-auto object-contain" />
               </div>
             </div>
+
+            {/* Desktop Links */}
             <div className="hidden lg:flex items-center gap-10 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
               <a href="#hero" className="hover:text-black transition-colors text-black">Inicio</a>
               <a href="#profesores" className="hover:text-black transition-colors text-black">Profesores</a>
@@ -300,8 +338,43 @@ export default function LandingPage() {
                 Agenda Gratis
               </a>
             </div>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-black hover:bg-zinc-100 rounded-lg transition-colors"
+            >
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden bg-white border-t border-black/5 overflow-hidden"
+            >
+              <div className="flex flex-col p-6 gap-6 text-sm font-black uppercase tracking-widest text-zinc-500">
+                <button onClick={() => handleNav('hero')} className="text-left hover:text-red-600 transition-colors">Inicio</button>
+                <button onClick={() => handleNav('profesores')} className="text-left hover:text-red-600 transition-colors">Profesores</button>
+                <button onClick={() => handleNav('programas')} className="text-left hover:text-red-600 transition-colors">Programas</button>
+                <button onClick={() => handleNav('horario')} className="text-left hover:text-red-600 transition-colors">Horarios</button>
+                <button onClick={() => handleNav('filiales')} className="text-left hover:text-red-600 transition-colors">Filiales</button>
+                <a 
+                  href="https://wa.me/56945908324" 
+                  target="_blank"
+                  className="bg-red-600 text-white text-center py-4 rounded-xl font-black shadow-lg shadow-red-600/20"
+                >
+                  Agenda Gratis
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* Hero Section */}
@@ -409,11 +482,11 @@ export default function LandingPage() {
             </div>
 
             {/* Dynamic Carousel for the rest */}
-            <div className="relative flex overflow-hidden w-full pt-10 group/carousel">
+            <div className="relative flex overflow-hidden w-full pt-10 group/carousel" ref={carouselRef}>
               <motion.div 
                 drag="x"
-                dragConstraints={{ left: -4000, right: 0 }}
-                animate={{ x: [0, -4000] }}
+                dragConstraints={constraints}
+                animate={!isMenuOpen ? { x: [0, constraints.left] } : {}}
                 transition={{ 
                   ease: "linear", 
                   duration: 80, 
@@ -423,7 +496,7 @@ export default function LandingPage() {
                 className="flex gap-10 whitespace-nowrap cursor-grab active:cursor-grabbing"
               >
                 {INSTRUCTORS_DATA.slice(1).map((prof, idx) => (
-                  <div key={idx} className="w-[320px] shrink-0 whitespace-normal">
+                  <div key={idx} className="w-[280px] md:min-w-[320px] shrink-0 whitespace-normal">
                     <InstructorCard {...prof} />
                   </div>
                 ))}
@@ -761,7 +834,7 @@ function InstructorCard({ name, role, rank, specialty, image }: { name: string, 
         <div className="text-white/60 font-bold text-[10px] uppercase tracking-wider mb-4">{role}</div>
         
         <div className="h-0 group-hover:h-12 transition-all duration-300 overflow-hidden opacity-0 group-hover:opacity-100 flex items-center justify-center">
-          <p className="text-[9px] uppercase font-black tracking-widest text-red-600/80 italic">Especialidad: {specialty}</p>
+          <p className="text-[9px] uppercase font-black tracking-widest text-red-600/80 italic">{specialty}</p>
         </div>
       </div>
     </motion.div>
